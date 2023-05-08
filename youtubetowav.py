@@ -32,7 +32,8 @@ youtube = googleapiclient.discovery.build("youtube", "v3", developerKey = "AIzaS
 request = youtube.playlistItems().list(
     part = "snippet",
     playlistId = playlist_id,
-    maxResults = 55
+    maxResults = 20
+
 )
 response = request.execute()
 
@@ -69,20 +70,28 @@ for j in range(int(number_of_songs)):
 
     yt = YouTube(str(i))
 
-    # extract only audio
+        # extract only audio
     video = yt.streams.filter(only_audio=True).first()
+    try:
 
-    # check for destination to save file
-    # print("Enter the destination (leave blank for current directory)")
-    destination = str(folder_path)
+        # check for destination to save file
+        # print("Enter the destination (leave blank for current directory)")
+        destination = str(folder_path)
 
-    # download the file
-    out_file = video.download(output_path=destination)
+        # download the file
+        out_file = video.download(output_path=destination)
 
-    # save the file
-    base, ext = os.path.splitext(out_file)
-    new_file = base + '.wav'
-    os.rename(out_file, new_file)
+        # save the file
+        base, ext = os.path.splitext(out_file)
+        new_file = base + '.wav'
+        os.rename(out_file, new_file)
 
-    # result of success
-    print(yt.title + " has been successfully downloaded.")
+        # result of success
+        print(yt.title + " has been successfully downloaded.")
+    except Exception as e:
+        print("############################### Error: ", e , "\nin song:", j)
+
+
+https://www.youtube.com/playlist?list=FLG8bKGKexijTiGcvNvMSyJQ
+yt-dlp -o "%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s" "https://www.youtube.com/playlist?list=FLG8bKGKexijTiGcvNvMSyJQ"
+
